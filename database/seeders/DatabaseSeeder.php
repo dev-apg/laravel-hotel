@@ -15,7 +15,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::table('hotels')->truncate();
+        DB::table('rooms')->truncate();
 
         $this->call(HotelsSeeder::class);
+        $this->call(RoomsSeeder::class);
     }
 }
