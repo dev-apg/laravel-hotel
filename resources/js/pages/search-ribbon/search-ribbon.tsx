@@ -1,35 +1,43 @@
 import { Button } from '@/components/ui/button';
-import { BookingFormData, SearchRibbonProps } from '@/types';
+import { BookingFormData, RoomAction, RoomData, SearchRibbonProps } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
+import { useEffect, useReducer } from 'react';
 import { DateRange } from 'react-day-picker';
 import DatePicker from './date-picker';
 import Rooms from './rooms';
+import { newRoomData, roomsReducer } from './search-ribbon-functions';
 import SelectHotel from './select-hotel';
+
+function createOccupancyString(rooms: RoomData[], param: keyof RoomData): string {
+    return rooms.map((room) => room[param].toString()).join(',');
+}
 
 export default function SearchRibbon({
     hotels,
     selected = { hotel: null, checkin: null, checkout: null, adults: null, children: null },
 }: SearchRibbonProps) {
-    // const [params, setParams] = useState({
-    //     hotelid: selected.hotelid ?? '',
-    //     checkin: selected.checkin ?? '',
-    //     checkout: selected.checkout ?? '',
-    //     adults: selected.adults ?? '',
-    //     children: selected.children ?? '',
-    // });
+    const [rooms, dispatchRooms] = useReducer(roomsReducer, [newRoomData(false)]) as [RoomData[], React.Dispatch<RoomAction>];
 
+    function handleReset() {
+        dispatchRooms({ type: 'reset' });
+        reset();
+    }
     const { data, setData, post, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
         selectedDate: {
             from: selected.checkin ? new Date(selected.checkin) : undefined,
             to: selected.checkout ? new Date(selected.checkout) : undefined,
         },
         hotel: selected.hotel ? selected.hotel : '',
-        adults: selected.adults ? selected.adults : '',
-        children: selected.children ? selected.children : '',
+        adults: selected.adults ? selected.adults : createOccupancyString(rooms, 'adults'),
+        children: selected.children ? selected.children : createOccupancyString(rooms, 'children'),
     });
 
-    console.log(data);
+    useEffect(() => {
+        data.adults = createOccupancyString(rooms, 'adults');
+        data.children = createOccupancyString(rooms, 'children');
+        return () => {};
+    }, [rooms]);
 
     function handleSetDate(newDateRange: DateRange | undefined) {
         if (!newDateRange || !newDateRange.from) {
@@ -73,9 +81,12 @@ export default function SearchRibbon({
         <div id="booking-ribbon">
             <SelectHotel hotels={hotels} data={data} setData={setData}></SelectHotel>
             <DatePicker className={''} date={data.selectedDate} setDate={handleSetDate} />
-            <Rooms />
-            <Button size={'sm'} onClick={() => console.log('hi, how are you')}>
+            <Rooms rooms={rooms} dispatchRooms={dispatchRooms} />
+            <Button size={'sm'} onClick={() => console.log(data)}>
                 Search
+            </Button>
+            <Button size={'sm'} onClick={() => handleReset()}>
+                reset
             </Button>
         </div>
     );

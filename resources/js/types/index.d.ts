@@ -75,3 +75,21 @@ export interface RoomData {
     adults: number;
     children: number;
 }
+
+export interface RoomsAction {
+    type: string;
+    payload: RoomsPayload;
+}
+
+export interface RoomsPayload {
+    uuid: string;
+}
+
+export type RoomAction =
+    | { type: 'add_room'; payload: { uuid: string } }
+    | { type: 'remove_room'; payload: { uuid: string } }
+    | { type: 'add_adult'; payload: { uuid: string } }
+    | { type: 'remove_adult'; payload: { uuid: string } }
+    | { type: 'add_child'; payload: { uuid: string } }
+    | { type: 'remove_child'; payload: { uuid: string } }
+    | { type: 'reset' };

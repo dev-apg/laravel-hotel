@@ -1,12 +1,5 @@
-import type { RoomData } from '@/types';
+import type { RoomAction, RoomData } from '@/types';
 import { Minus, Plus, X } from 'lucide-react';
-
-type RoomAction =
-    | { type: 'remove_room'; payload: { uuid: string } }
-    | { type: 'add_adult'; payload: { uuid: string } }
-    | { type: 'remove_adult'; payload: { uuid: string } }
-    | { type: 'add_child'; payload: { uuid: string } }
-    | { type: 'remove_child'; payload: { uuid: string } };
 
 interface RoomComponentProps {
     room: RoomData;
