@@ -42,7 +42,21 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface SearchData {
+    hotels: Hotel[];
+    selectedHotelID: number | null;
+    checkin: string | null;
+    checkout: string | null;
+}
+
 export interface Hotel {
-    id: Number;
-    name: String;
+    id: number;
+    name: string;
+}
+
+export interface RoomData {
+    uuid: string;
+    removable: boolean;
+    adults: number;
+    children: number;
 }

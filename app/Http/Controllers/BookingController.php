@@ -14,12 +14,12 @@ class BookingController extends Controller
     public function index()
     {
 
-        $data = [
+        $searchData = [
             'hotels' => Hotel::all()
         ];
 
 
-        return Inertia::render('home', compact('data'));
+        return Inertia::render('home', compact('searchData'));
     }
 
     /**
