@@ -1,4 +1,5 @@
-import { SearchData } from '@/types';
+import { Button } from '@/components/ui/button';
+import { BookingFormData, SearchRibbonProps } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
 import { DateRange } from 'react-day-picker';
@@ -6,24 +7,29 @@ import DatePicker from './date-picker';
 import Rooms from './rooms';
 import SelectHotel from './select-hotel';
 
-interface SearchRibbonProps {
-    searchData: SearchData;
-}
+export default function SearchRibbon({
+    hotels,
+    selected = { hotel: null, checkin: null, checkout: null, adults: null, children: null },
+}: SearchRibbonProps) {
+    // const [params, setParams] = useState({
+    //     hotelid: selected.hotelid ?? '',
+    //     checkin: selected.checkin ?? '',
+    //     checkout: selected.checkout ?? '',
+    //     adults: selected.adults ?? '',
+    //     children: selected.children ?? '',
+    // });
 
-interface SearchForm {
-    selectedHotel: string | number | undefined;
-    selectedDate: DateRange | undefined;
-}
-
-export default function SearchRibbon({ searchData }: SearchRibbonProps) {
-    const { hotels, selectedHotelID, checkin, checkout } = searchData;
-    const { data, setData, post, get, processing, errors, reset } = useForm<Required<SearchForm>>({
+    const { data, setData, post, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
         selectedDate: {
-            from: checkin ? new Date(checkin) : undefined,
-            to: checkout ? new Date(checkout) : undefined,
+            from: selected.checkin ? new Date(selected.checkin) : undefined,
+            to: selected.checkout ? new Date(selected.checkout) : undefined,
         },
-        selectedHotel: selectedHotelID ? selectedHotelID : '',
+        hotel: selected.hotel ? selected.hotel : '',
+        adults: selected.adults ? selected.adults : '',
+        children: selected.children ? selected.children : '',
     });
+
+    console.log(data);
 
     function handleSetDate(newDateRange: DateRange | undefined) {
         if (!newDateRange || !newDateRange.from) {
@@ -65,9 +71,12 @@ export default function SearchRibbon({ searchData }: SearchRibbonProps) {
 
     return (
         <div id="booking-ribbon">
-            <SelectHotel hotels={searchData.hotels}></SelectHotel>
+            <SelectHotel hotels={hotels} data={data} setData={setData}></SelectHotel>
             <DatePicker className={''} date={data.selectedDate} setDate={handleSetDate} />
             <Rooms />
+            <Button size={'sm'} onClick={() => console.log('hi, how are you')}>
+                Search
+            </Button>
         </div>
     );
 }

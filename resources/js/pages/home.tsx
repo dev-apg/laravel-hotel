@@ -1,15 +1,19 @@
-import { SearchData, type SharedData } from '@/types';
+import { SearchRibbonProps, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import SearchRibbon from './search-ribbon/search-ribbon';
 
-interface SearchProps {
-    searchData: SearchData;
+// interface HomeProps {
+//     hotels: Hotel[];
+// }
+
+interface HomeProps {
+    searchRibbonProps: SearchRibbonProps;
 }
 
-export default function Home({ searchData }: SearchProps) {
-    console.log(searchData);
-
+export default function Home({ searchRibbonProps }: HomeProps) {
     const { auth } = usePage<SharedData>().props;
+
+    const { hotels } = searchRibbonProps;
 
     return (
         <>
@@ -47,7 +51,7 @@ export default function Home({ searchData }: SearchProps) {
                 </header>
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
-                        <SearchRibbon searchData={searchData} />
+                        <SearchRibbon hotels={hotels} />
                     </main>
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>

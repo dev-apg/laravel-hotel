@@ -13,13 +13,10 @@ class BookingController extends Controller
      */
     public function index()
     {
-
-        $searchData = [
-            'hotels' => Hotel::all()
+        $searchRibbonProps = [
+            'hotels' => Hotel::all(),
         ];
-
-
-        return Inertia::render('home', compact('searchData'));
+        return Inertia::render('home', compact('searchRibbonProps'));
     }
 
     /**

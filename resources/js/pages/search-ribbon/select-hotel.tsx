@@ -1,12 +1,15 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Hotel } from '@/types';
+import { BookingFormData, BookingSetData, Hotel } from '@/types';
+
 interface SelectHotelProps {
     hotels: Hotel[];
+    data: BookingFormData;
+    setData: BookingSetData;
 }
 
-export default function SelectHotel({ hotels }: SelectHotelProps) {
+export default function SelectHotel({ hotels, data, setData }: SelectHotelProps) {
     return (
-        <Select>
+        <Select value={data.hotel?.toString()} onValueChange={(value) => setData('hotel', value)}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Hotel" />
             </SelectTrigger>
