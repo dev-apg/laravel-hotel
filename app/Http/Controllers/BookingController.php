@@ -31,7 +31,7 @@ class BookingController extends Controller
                 'hotel' => 'required|exists:hotels,id',
                 'rooms' => 'required|integer|min:1|max:6',
                 'from' => 'required|date_format:Y-m-d|after_or_equal:today',
-                'to' => 'required|date_format:Y-m-d|after:checkin',
+                'to' => 'required|date_format:Y-m-d|after:from',
                 'adults' => 'required|string|min:1|max:50',
                 'children' => 'required|string|min:1|max:50',
             ]);
