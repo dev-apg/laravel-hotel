@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BookingFormData, BookingSetData, Hotel } from '@/types';
 
 interface SelectHotelProps {
@@ -11,10 +11,11 @@ export default function SelectHotel({ hotels, data, setData }: SelectHotelProps)
     return (
         <Select value={data.hotel?.toString()} onValueChange={(value) => setData('hotel', value)}>
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Hotel" />
+                <SelectValue placeholder="Choose your hotel" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
+                    <SelectLabel>Hotels</SelectLabel>
                     {hotels.map((hotel) => {
                         return (
                             <SelectItem key={hotel.id.toString()} value={hotel.id.toString()}>

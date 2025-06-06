@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button';
 import { BookingFormData, RoomAction, RoomData, SearchRibbonProps } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
-import { useEffect, useReducer } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEvent, useEffect, useReducer, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import DatePicker from './date-picker';
 import Rooms from './rooms';
@@ -19,29 +20,40 @@ export default function SearchRibbon({
 }: SearchRibbonProps) {
     const [rooms, dispatchRooms] = useReducer(roomsReducer, [newRoomData(false)]) as [RoomData[], React.Dispatch<RoomAction>];
 
+    const [dates, setDates] = useState<{ from: Date | undefined; to?: Date | undefined } | undefined>({
+        from: selected.checkin ? new Date(selected.checkin) : undefined,
+        to: selected.checkout ? new Date(selected.checkout) : undefined,
+    });
+
     function handleReset() {
         dispatchRooms({ type: 'reset' });
         reset();
     }
-    const { data, setData, post, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
-        selectedDate: {
-            from: selected.checkin ? new Date(selected.checkin) : undefined,
-            to: selected.checkout ? new Date(selected.checkout) : undefined,
-        },
+    const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>('remeembe', {
         hotel: selected.hotel ? selected.hotel : '',
+        from: dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined,
+        to: dates?.to ? format(dates.to, 'yyyy-MM-dd') : undefined,
+        rooms: rooms.length,
         adults: selected.adults ? selected.adults : createOccupancyString(rooms, 'adults'),
         children: selected.children ? selected.children : createOccupancyString(rooms, 'children'),
     });
 
     useEffect(() => {
-        data.adults = createOccupancyString(rooms, 'adults');
-        data.children = createOccupancyString(rooms, 'children');
+        setData('rooms', rooms.length);
+        setData('adults', createOccupancyString(rooms, 'adults'));
+        setData('children', createOccupancyString(rooms, 'children'));
         return () => {};
     }, [rooms]);
 
+    useEffect(() => {
+        setData('from', dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined);
+        setData('to', dates?.to ? format(dates.to, 'yyyy-MM-dd') : undefined);
+        return () => {};
+    }, [dates]);
+
     function handleSetDate(newDateRange: DateRange | undefined) {
         if (!newDateRange || !newDateRange.from) {
-            setData('selectedDate', newDateRange);
+            setDates(newDateRange);
             return;
         }
 
@@ -74,20 +86,30 @@ export default function SearchRibbon({
             return;
         }
 
-        setData('selectedDate', newDateRange);
+        setDates(newDateRange);
+    }
+
+    function submit(e: FormEvent) {
+        e.preventDefault();
+        get(route('ancillaries', {}), {
+            onFinish: () => reset(),
+        });
     }
 
     return (
         <div id="booking-ribbon">
-            <SelectHotel hotels={hotels} data={data} setData={setData}></SelectHotel>
-            <DatePicker className={''} date={data.selectedDate} setDate={handleSetDate} />
-            <Rooms rooms={rooms} dispatchRooms={dispatchRooms} />
-            <Button size={'sm'} onClick={() => console.log(data)}>
-                Search
-            </Button>
-            <Button size={'sm'} onClick={() => handleReset()}>
-                reset
-            </Button>
+            <form onSubmit={submit} action="" method="get">
+                <SelectHotel hotels={hotels} data={data} setData={setData}></SelectHotel>
+                <DatePicker className={''} dates={dates} setDate={handleSetDate} />
+                <Rooms rooms={rooms} dispatchRooms={dispatchRooms} />
+                <Button type={'submit'} size={'sm'} onClick={() => console.log(data)} disabled={processing}>
+                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    Search
+                </Button>
+                <Button type={'reset'} size={'sm'} onClick={() => handleReset()}>
+                    Reset
+                </Button>
+            </form>
         </div>
     );
 }

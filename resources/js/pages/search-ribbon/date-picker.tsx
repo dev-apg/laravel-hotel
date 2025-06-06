@@ -9,24 +9,24 @@ import { DateRange } from 'react-day-picker';
 
 interface DatePickerProps {
     className: string | React.HTMLAttributes<HTMLDivElement>;
-    date: DateRange | undefined;
+    dates: DateRange | undefined;
     setDate: (date: DateRange | undefined) => void;
 }
 
-export default function DatePicker({ className, date, setDate }: DatePickerProps) {
+export default function DatePicker({ className, dates, setDate }: DatePickerProps) {
     return (
         <div className={cn('grid gap-2', className)}>
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button id="date" variant={'outline'} className={cn('justify-start text-left font-normal', !date && 'text-muted-foreground')}>
+                    <Button id="date" variant={'outline'} className={cn('justify-start text-left font-normal', !dates && 'text-muted-foreground')}>
                         <CalendarIcon />
-                        {date?.from ? (
-                            date.to ? (
+                        {dates?.from ? (
+                            dates.to ? (
                                 <>
-                                    {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+                                    {format(dates.from, 'LLL dd, y')} - {format(dates.to, 'LLL dd, y')}
                                 </>
                             ) : (
-                                format(date.from, 'LLL dd, y')
+                                format(dates.from, 'LLL dd, y')
                             )
                         ) : (
                             <span>Pick a date</span>
@@ -34,7 +34,7 @@ export default function DatePicker({ className, date, setDate }: DatePickerProps
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar initialFocus mode="range" defaultMonth={date?.from} selected={date} onSelect={setDate} numberOfMonths={1} />
+                    <Calendar initialFocus mode="range" defaultMonth={dates?.from} selected={dates} onSelect={setDate} numberOfMonths={1} />
                 </PopoverContent>
             </Popover>
         </div>

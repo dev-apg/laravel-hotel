@@ -2,15 +2,17 @@ import { SearchRibbonProps, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import SearchRibbon from './search-ribbon/search-ribbon';
 
-// interface HomeProps {
-//     hotels: Hotel[];
-// }
-
 interface HomeProps {
     searchRibbonProps: SearchRibbonProps;
+    flash: FlashMessages;
 }
 
-export default function Home({ searchRibbonProps }: HomeProps) {
+interface FlashMessages {
+    error: string;
+}
+
+export default function Home({ searchRibbonProps, flash }: HomeProps) {
+    console.log(arguments);
     const { auth } = usePage<SharedData>().props;
 
     const { hotels } = searchRibbonProps;
@@ -51,6 +53,7 @@ export default function Home({ searchRibbonProps }: HomeProps) {
                 </header>
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
+                        {flash.error && <p className="text-red-500">{flash.error}</p>}
                         <SearchRibbon hotels={hotels} />
                     </main>
                 </div>

@@ -49,20 +49,14 @@ export interface SearchRibbonProps {
 
 export interface BookingFormData {
     hotel: string | number | undefined;
-    selectedDate: DateRange | undefined;
+    from: string | undefined;
+    to: string | undefined;
     adults: string | number | undefined;
     children: string | number | undefined;
+    rooms: number;
 }
 
 export type BookingSetData = ReturnType<typeof useForm<BookingFormData>>['setData'];
-
-export interface SearchData {
-    hotel: number | null;
-    checkin: string | null;
-    checkout: string | null;
-    adults: string | null;
-    children: string | null;
-}
 
 export interface Hotel {
     id: number;
@@ -86,7 +80,7 @@ export interface RoomsPayload {
 }
 
 export type RoomAction =
-    | { type: 'add_room'; payload: { uuid: string } }
+    | { type: 'add_room' }
     | { type: 'remove_room'; payload: { uuid: string } }
     | { type: 'add_adult'; payload: { uuid: string } }
     | { type: 'remove_adult'; payload: { uuid: string } }

@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { RoomAction, RoomData } from '@/types';
 import { PopoverContent } from '@radix-ui/react-popover';
 import Room from './room';
-import { newRoomData } from './search-ribbon-functions';
 
 interface RoomsProps {
     rooms: RoomData[];
@@ -32,7 +31,16 @@ export default function Rooms({ rooms, dispatchRooms }: RoomsProps) {
                     {rooms.map((room) => (
                         <Room key={room.uuid} room={room} dispatchRooms={dispatchRooms} />
                     ))}
-                    {rooms.length < 6 && <Button onClick={() => dispatchRooms({ type: 'add_room', payload: newRoomData() })}>Add Room</Button>}
+                    {rooms.length < 6 && (
+                        <Button
+                            type="button"
+                            onClick={(e) => {
+                                dispatchRooms({ type: 'add_room' });
+                            }}
+                        >
+                            Add Room
+                        </Button>
+                    )}
                 </div>
             </PopoverContent>
         </Popover>
