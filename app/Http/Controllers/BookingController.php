@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Rules\OccupancyRule;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -28,25 +31,30 @@ class BookingController extends Controller
     {
         try {
             $validated = $request->validate([
-                'hotel' => 'required|exists:hotels,id',
+                'hotel' => 'required|integer|exists:hotels,id',
                 'rooms' => 'required|integer|min:1|max:6',
                 'from' => 'required|date_format:Y-m-d|after_or_equal:today',
                 'to' => 'required|date_format:Y-m-d|after:from',
-                'adults' => 'required|string|min:1|max:50',
-                'children' => 'required|string|min:1|max:50',
+                'adults' => ['required', 'string', new OccupancyRule(minPerRoom: 1, maxPerRoom: 2)],
+                'children' => ['required', 'string', new OccupancyRule(minPerRoom: 0, maxPerRoom: 1)],
             ]);
         } catch (ValidationException $e) {
-            return $this->redirectToHome();
+            return $this->redirectToHome('There was a problem with your request, please try again');
         }
+
+        return dd($request->fullUrl());
 
         $hotelID = $request->input('hotel', 'no-hotel');
         $hotel = Hotel::with('ancillaries')->find($hotelID);
 
+
         dump($hotel);
+        return;
+
+        Log::debug('got to heeeeerrrreeee');
 
         $from = $request->input('from', 'no-checkin');
         $to = $request->input('to', 'no-checkout');
-        $rooms = $request->input('rooms', 'no-rooms');
         $adults = $request->input('adults', 'no-adults');
         $children = $request->input('children', 'no-adults');
 
@@ -64,7 +72,7 @@ class BookingController extends Controller
         return Inertia::render('ancillaries', compact('props'));
     }
 
-    private function redirectToHome($message = 'There was a problem with your request, please try again')
+    private function redirectToHome($message)
     {
 
         $searchRibbonProps = [

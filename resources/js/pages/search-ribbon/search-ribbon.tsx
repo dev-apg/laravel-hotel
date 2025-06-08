@@ -29,6 +29,7 @@ export default function SearchRibbon({
         dispatchRooms({ type: 'reset' });
         reset();
     }
+
     const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>('remeembe', {
         hotel: selected.hotel ? selected.hotel : '',
         from: dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined,
@@ -91,9 +92,7 @@ export default function SearchRibbon({
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        get(route('ancillaries', {}), {
-            onFinish: () => reset(),
-        });
+        get(route('ancillaries', {}), {});
     }
 
     return (
