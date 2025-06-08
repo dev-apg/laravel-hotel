@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('hotel_id');
             $table->string('room_id');
             $table->string('user_id');
-            $table->string('check_in');
-            $table->string('check_out');
+            $table->string('from');
+            $table->string('to');
             $table->timestamps();
         });
     }
