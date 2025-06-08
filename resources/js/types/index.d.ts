@@ -59,8 +59,11 @@ export interface BookingFormData {
 export type BookingSetData = ReturnType<typeof useForm<BookingFormData>>['setData'];
 
 export interface Hotel {
-    id: number;
     name: string;
+    address_line_1: string;
+    address_line_2: string;
+    county: string;
+    postcode: string;
 }
 
 export interface RoomData {
@@ -88,10 +91,9 @@ export type RoomAction =
     | { type: 'remove_child'; payload: { uuid: string } }
     | { type: 'reset' };
 
-interface Hotel {
+export interface Ancillary {
+    id: number;
     name: string;
-    address_line_1: string;
-    address_line_2: string;
-    county: string;
-    postcode: string;
+    pricing_type: string;
+    description: string;
 }

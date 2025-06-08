@@ -47,7 +47,7 @@ class BookingController extends Controller
         $hotel = Hotel::with('ancillaries')->find($hotelID);
 
         $props = [
-            // 'ancillaries' => $hotel->ancillaries,
+            'ancillaries' => $hotel->ancillaries,
             'hotel' => $hotel,
             // 'from' => $from,
             // 'to' => $to,
