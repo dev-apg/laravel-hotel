@@ -1,3 +1,5 @@
+import HotelDetails from '@/components/hotel-details';
+
 interface AncillariesProps {
     props: any;
 }
@@ -9,11 +11,11 @@ export default function Ancillaries({ props }: AncillariesProps) {
     return (
         <div>
             <div className="flex flex-col">
-                <span>hotel: {hotel}</span>
-                <span>checkin: {checkin}</span>
+                <HotelDetails hotel={hotel} />
+                {/* <span>checkin: {checkin}</span>
                 <span>checkout: {checkout}</span>
                 <span>adults: {adults}</span>
-                <span>children: {children}</span>
+                <span>children: {children}</span> */}
             </div>
         </div>
     );

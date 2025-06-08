@@ -87,3 +87,11 @@ export type RoomAction =
     | { type: 'add_child'; payload: { uuid: string } }
     | { type: 'remove_child'; payload: { uuid: string } }
     | { type: 'reset' };
+
+interface Hotel {
+    name: string;
+    address_line_1: string;
+    address_line_2: string;
+    county: string;
+    postcode: string;
+}

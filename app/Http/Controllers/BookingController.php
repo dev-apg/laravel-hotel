@@ -42,31 +42,18 @@ class BookingController extends Controller
             return $this->redirectToHome('There was a problem with your request, please try again');
         }
 
-        return dd($request->fullUrl());
 
         $hotelID = $request->input('hotel', 'no-hotel');
         $hotel = Hotel::with('ancillaries')->find($hotelID);
 
-
-        dump($hotel);
-        return;
-
-        Log::debug('got to heeeeerrrreeee');
-
-        $from = $request->input('from', 'no-checkin');
-        $to = $request->input('to', 'no-checkout');
-        $adults = $request->input('adults', 'no-adults');
-        $children = $request->input('children', 'no-adults');
-
-
         $props = [
-            'ancillaries' => $hotel->ancillaries,
+            // 'ancillaries' => $hotel->ancillaries,
             'hotel' => $hotel,
-            'from' => $from,
-            'to' => $to,
-            'rooms' => $rooms,
-            'adults' => $adults,
-            'children' => $children,
+            // 'from' => $from,
+            // 'to' => $to,
+            // 'rooms' => $rooms,
+            // 'adults' => $adults,
+            // 'children' => $children,
         ];
 
         return Inertia::render('ancillaries', compact('props'));
