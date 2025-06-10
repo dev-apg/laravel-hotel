@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Booking extends Model
 {
+    protected $fillable = [
+        'hotel_id',
+        'room_id',
+        'user_id',
+        'from',
+        'to',
+    ];
+
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);

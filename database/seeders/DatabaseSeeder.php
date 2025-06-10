@@ -14,14 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('users')->truncate();
         DB::table('hotels')->truncate();
         DB::table('rooms')->truncate();
         DB::table('ancillaries')->truncate();
+        DB::table('bookings')->truncate();
         DB::table('ancillary_hotel')->truncate();
         DB::table('ancillary_booking')->truncate();
 
+        $this->call(UsersSeeder::class);
         $this->call(HotelsSeeder::class);
         $this->call(RoomsSeeder::class);
         $this->call(AncillariesSeeder::class);
+        $this->call(BookingsSeeder::class);
     }
 }

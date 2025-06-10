@@ -7,8 +7,8 @@ interface AncillaryProps {
 export default function AncillaryComponent({ ancillary }: AncillaryProps) {
     const { name, description } = ancillary;
     return (
-        <div>
-            <p>{name}</p>
+        <div className="p-2">
+            <p className="font-bold">{name}</p>
             <p>{description}</p>
         </div>
     );

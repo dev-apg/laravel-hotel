@@ -12,12 +12,10 @@ export default function Ancillaries({ props }: AncillariesProps) {
     return (
         <div>
             <div className="flex flex-col">
-                <HotelDetails hotel={hotel} />
+                <div className="p-2">
+                    <HotelDetails hotel={hotel} />
+                </div>
                 <AncillariesListComponent ancillaries={ancillaries} />
-                {/* <span>checkin: {checkin}</span>
-                <span>checkout: {checkout}</span>
-                <span>adults: {adults}</span>
-                <span>children: {children}</span> */}
             </div>
         </div>
     );

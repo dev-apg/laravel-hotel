@@ -8,9 +8,9 @@ interface RoomComponentProps {
 
 export default function Room({ room, dispatchRooms }: RoomComponentProps) {
     return (
-        <div className="bg-red-500">
+        <div className="border">
             <div className="flex h-auto justify-end" onClick={() => dispatchRooms({ type: 'remove_room', payload: { uuid: room.uuid } })}>
-                <span className={'bg-green-500 ' + `${!room.removable && 'invisible'}`}>
+                <span className={'cursor-pointer ' + `${!room.removable && 'invisible'}`}>
                     <X />
                 </span>
             </div>
