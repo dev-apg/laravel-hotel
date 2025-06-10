@@ -1,6 +1,6 @@
 import { SearchRibbonProps, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import SearchRibbon from './search-ribbon/search-ribbon';
+import SearchRibbon from './availability-search/availability-search-form';
 
 interface HomeProps {
     searchRibbonProps: SearchRibbonProps;

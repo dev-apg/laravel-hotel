@@ -5,16 +5,16 @@ import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
 import { LoaderCircle } from 'lucide-react';
 import { FormEvent, useEffect, useReducer, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { newRoomData, roomsReducer } from './availability-search-functions';
 import DatePicker from './date-picker';
 import Rooms from './rooms';
-import { newRoomData, roomsReducer } from './search-ribbon-functions';
 import SelectHotel from './select-hotel';
 
 function createOccupancyString(rooms: RoomData[], param: keyof RoomData): string {
     return rooms.map((room) => room[param].toString()).join(',');
 }
 
-export default function SearchRibbon({
+export default function AvailabilitySearchForm({
     hotels,
     selected = { hotel: null, checkin: null, checkout: null, adults: null, children: null },
 }: SearchRibbonProps) {
