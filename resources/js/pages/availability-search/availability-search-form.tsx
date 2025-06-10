@@ -14,6 +14,28 @@ function createOccupancyString(rooms: RoomData[], param: keyof RoomData): string
     return rooms.map((room) => room[param].toString()).join(',');
 }
 
+function dataMissing(data: BookingFormData): boolean {
+    if (!data.hotel) {
+        return true;
+    }
+    if (!data.from) {
+        return true;
+    }
+    if (!data.to) {
+        return true;
+    }
+    if (!data.rooms) {
+        return true;
+    }
+    if (!data.adults) {
+        return true;
+    }
+    if (!data.children) {
+        return true;
+    }
+    return false;
+}
+
 export default function AvailabilitySearchForm({
     hotels,
     selected = { hotel: null, checkin: null, checkout: null, adults: null, children: null },
@@ -101,7 +123,7 @@ export default function AvailabilitySearchForm({
                 <SelectHotel hotels={hotels} data={data} setData={setData}></SelectHotel>
                 <DatePicker className={''} dates={dates} setDate={handleSetDate} />
                 <Rooms rooms={rooms} dispatchRooms={dispatchRooms} />
-                <Button type={'submit'} size={'sm'} onClick={() => console.log(data)} disabled={processing}>
+                <Button disabled={dataMissing(data) || processing} type={'submit'} size={'sm'} onClick={() => console.log(data)}>
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     Search
                 </Button>
