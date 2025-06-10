@@ -52,7 +52,7 @@ export default function AvailabilitySearchForm({
         reset();
     }
 
-    const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>('remeembe', {
+    const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
         hotel: selected.hotel ? selected.hotel : '',
         from: dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined,
         to: dates?.to ? format(dates.to, 'yyyy-MM-dd') : undefined,
