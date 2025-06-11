@@ -15,7 +15,7 @@ function createOccupancyString(rooms: RoomData[], param: keyof RoomData): string
 }
 
 function dataMissing(data: BookingFormData): boolean {
-    if (!data.hotel) {
+    if (!data.hotel_id) {
         return true;
     }
     if (!data.from) {
@@ -53,7 +53,7 @@ export default function AvailabilitySearchForm({
     }
 
     const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
-        hotel: selected.hotel ? selected.hotel : '',
+        hotel_id: selected.hotel ? selected.hotel : '',
         from: dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined,
         to: dates?.to ? format(dates.to, 'yyyy-MM-dd') : undefined,
         rooms: rooms.length,
@@ -114,7 +114,7 @@ export default function AvailabilitySearchForm({
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        get(route('ancillaries', {}), {});
+        get(route('bookings.ancillaries', {}), {});
     }
 
     return (

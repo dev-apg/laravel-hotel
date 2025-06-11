@@ -1,6 +1,6 @@
 import { SearchRibbonProps, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import SearchRibbon from './availability-search/availability-search-form';
+import AvailabilitySearchForm from './availability-search/availability-search-form';
 
 interface HomeProps {
     searchRibbonProps: SearchRibbonProps;
@@ -54,7 +54,7 @@ export default function Home({ searchRibbonProps, flash }: HomeProps) {
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
                         {flash.error && <p className="text-red-500">{flash.error}</p>}
-                        <SearchRibbon hotels={hotels} />
+                        <AvailabilitySearchForm hotels={hotels} />
                     </main>
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>

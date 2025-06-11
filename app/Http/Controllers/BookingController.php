@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\FetchRoomsService;
 use App\Models\Hotel;
 use App\Rules\OccupancyRule;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -27,11 +29,12 @@ class BookingController extends Controller
      * Display list of ancillaries
      */
 
-    public function ancillaries(Request $request)
+    public function ancillaries(Request $request, FetchRoomsService $fetch)
     {
+
         try {
             $validated = $request->validate([
-                'hotel' => 'required|integer|exists:hotels,id',
+                'hotel_id' => 'required|integer|exists:hotels,id',
                 'rooms' => 'required|integer|min:1|max:6',
                 'from' => 'required|date_format:Y-m-d|after_or_equal:today',
                 'to' => 'required|date_format:Y-m-d|after:from',
@@ -42,18 +45,34 @@ class BookingController extends Controller
             return $this->redirectToHome('There was a problem with your request, please try again');
         }
 
+        $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
+        $hotel = Hotel::with('ancillaries')->find($request->hotel_id);
 
-        $hotelID = $request->input('hotel', 'no-hotel');
-        $hotel = Hotel::with('ancillaries')->find($hotelID);
+        if ($request->rooms > count($availableRooms)) {
+            $max = count($availableRooms);
+            $roomText = $max > 1 ? 'rooms' : 'room';
+            return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
+        }
+
+
+        $roomsData = $availableRooms->map(function ($room) use ($hotel) {
+            return [
+                'id' => $room->id,
+                'number' => $room->number,
+                'selected_ancillaries' => [], // Empty by default
+                'available_ancillaries' => $hotel->ancillaries
+            ];
+        });
+
 
         $props = [
-            'ancillaries' => $hotel->ancillaries,
             'hotel' => $hotel,
-            // 'from' => $from,
-            // 'to' => $to,
-            // 'rooms' => $rooms,
-            // 'adults' => $adults,
-            // 'children' => $children,
+            'rooms' => $request->rooms,
+            'from' => $request->from,
+            'to' => $request->to,
+            'adults' => $request->adults,
+            'children' => $request->children,
+            'rooms_data' => $roomsData
         ];
 
         return Inertia::render('ancillaries', compact('props'));

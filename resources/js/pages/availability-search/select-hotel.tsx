@@ -9,7 +9,7 @@ interface SelectHotelProps {
 
 export default function SelectHotel({ hotels, data, setData }: SelectHotelProps) {
     return (
-        <Select value={data.hotel?.toString()} onValueChange={(value) => setData('hotel', value)}>
+        <Select value={data.hotel_id?.toString()} onValueChange={(value) => setData('hotel_id', value)}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Choose your hotel" />
             </SelectTrigger>

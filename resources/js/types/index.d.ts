@@ -48,7 +48,7 @@ export interface SearchRibbonProps {
 }
 
 export interface BookingFormData {
-    hotel: string | number | undefined;
+    hotel_id: string | number | undefined;
     from: string | undefined;
     to: string | undefined;
     adults: string | number | undefined;
@@ -59,6 +59,7 @@ export interface BookingFormData {
 export type BookingSetData = ReturnType<typeof useForm<BookingFormData>>['setData'];
 
 export interface Hotel {
+    id: number;
     name: string;
     address_line_1: string;
     address_line_2: string;

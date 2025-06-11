@@ -9,7 +9,7 @@ use InvalidArgumentException;
 
 class FetchRoomsService
 {
-    public function fetchAvailable(int $hotelId, Carbon $from, Carbon $to): Collection
+    public function availableRooms(int $hotelId, Carbon $from, Carbon $to): Collection
     {
 
         if ($from >= $to) {
