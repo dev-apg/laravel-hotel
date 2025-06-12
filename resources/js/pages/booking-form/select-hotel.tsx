@@ -1,9 +1,9 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BookingFormData, BookingSetData, Hotel } from '@/types';
+import { BookingFormValues, BookingSetData, Hotel } from '@/types';
 
 interface SelectHotelProps {
     hotels: Hotel[];
-    data: BookingFormData;
+    data: BookingFormValues;
     setData: BookingSetData;
 }
 

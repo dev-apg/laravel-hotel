@@ -1,20 +1,24 @@
 import { Button } from '@/components/ui/button';
-import { BookingFormData, RoomAction, RoomData, SearchRibbonProps } from '@/types';
+import { BookingFormValues, Hotel, RoomAction, RoomData } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
 import { LoaderCircle } from 'lucide-react';
 import { FormEvent, useEffect, useReducer, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { newRoomData, roomsReducer } from './availability-search-functions';
+import { newRoomData, roomsReducer } from './booking-form-functions';
 import DatePicker from './date-picker';
 import Rooms from './rooms';
 import SelectHotel from './select-hotel';
 
-function createOccupancyString(rooms: RoomData[], param: keyof RoomData): string {
-    return rooms.map((room) => room[param].toString()).join(',');
+interface BookingFormProps {
+    hotels: Hotel[];
 }
 
-function dataMissing(data: BookingFormData): boolean {
+function buildRoomsString(rooms: RoomData[]): string {
+    return rooms.map((room) => `${room.adults}-${room.children}`).join('_');
+}
+
+function dataMissing(data: BookingFormValues): boolean {
     if (!data.hotel_id) {
         return true;
     }
@@ -27,24 +31,15 @@ function dataMissing(data: BookingFormData): boolean {
     if (!data.rooms) {
         return true;
     }
-    if (!data.adults) {
-        return true;
-    }
-    if (!data.children) {
-        return true;
-    }
     return false;
 }
 
-export default function AvailabilitySearchForm({
-    hotels,
-    selected = { hotel: null, checkin: null, checkout: null, adults: null, children: null },
-}: SearchRibbonProps) {
+export default function BookingForm({ hotels }: BookingFormProps) {
     const [rooms, dispatchRooms] = useReducer(roomsReducer, [newRoomData(false)]) as [RoomData[], React.Dispatch<RoomAction>];
 
     const [dates, setDates] = useState<{ from: Date | undefined; to?: Date | undefined } | undefined>({
-        from: selected.checkin ? new Date(selected.checkin) : undefined,
-        to: selected.checkout ? new Date(selected.checkout) : undefined,
+        from: undefined,
+        to: undefined,
     });
 
     function handleReset() {
@@ -52,19 +47,15 @@ export default function AvailabilitySearchForm({
         reset();
     }
 
-    const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormData>>({
-        hotel_id: selected.hotel ? selected.hotel : '',
+    const { data, setData, get, processing, errors, reset } = useForm<Required<BookingFormValues>>({
+        hotel_id: '',
         from: dates?.from ? format(dates.from, 'yyyy-MM-dd') : undefined,
         to: dates?.to ? format(dates.to, 'yyyy-MM-dd') : undefined,
-        rooms: rooms.length,
-        adults: selected.adults ? selected.adults : createOccupancyString(rooms, 'adults'),
-        children: selected.children ? selected.children : createOccupancyString(rooms, 'children'),
+        rooms: buildRoomsString(rooms),
     });
 
     useEffect(() => {
-        setData('rooms', rooms.length);
-        setData('adults', createOccupancyString(rooms, 'adults'));
-        setData('children', createOccupancyString(rooms, 'children'));
+        setData('rooms', buildRoomsString(rooms));
         return () => {};
     }, [rooms]);
 

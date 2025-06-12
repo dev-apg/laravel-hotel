@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\FetchRoomsService;
 use App\Models\Hotel;
 use App\Rules\OccupancyRule;
+use App\Rules\ValidateRoomsString;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,10 +20,10 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $searchRibbonProps = [
+        $bookingFormData = [
             'hotels' => Hotel::all(),
         ];
-        return Inertia::render('home', compact('searchRibbonProps'));
+        return Inertia::render('home', compact('bookingFormData'));
     }
 
     /**
@@ -31,15 +32,12 @@ class BookingController extends Controller
 
     public function ancillaries(Request $request, FetchRoomsService $fetch)
     {
-
         try {
             $validated = $request->validate([
                 'hotel_id' => 'required|integer|exists:hotels,id',
-                'rooms' => 'required|integer|min:1|max:6',
+                'rooms' => ['required', new ValidateRoomsString(adults: ['min' => 1, 'max' => 2], children: ['min' => 0, 'max' => 1])],
                 'from' => 'required|date_format:Y-m-d|after_or_equal:today',
                 'to' => 'required|date_format:Y-m-d|after:from',
-                'adults' => ['required', 'string', new OccupancyRule(minPerRoom: 1, maxPerRoom: 2)],
-                'children' => ['required', 'string', new OccupancyRule(minPerRoom: 0, maxPerRoom: 1)],
             ]);
         } catch (ValidationException $e) {
             return $this->redirectToHome('There was a problem with your request, please try again');
@@ -53,7 +51,6 @@ class BookingController extends Controller
             $roomText = $max > 1 ? 'rooms' : 'room';
             return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
         }
-
 
         $roomsData = $availableRooms->map(function ($room) use ($hotel) {
             return [

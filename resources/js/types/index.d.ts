@@ -42,18 +42,16 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface SearchRibbonProps {
+// Used in home page
+export interface BookingFormData {
     hotels: Hotel[];
-    selected?: SearchData;
 }
 
-export interface BookingFormData {
+export interface BookingFormValues {
     hotel_id: string | number | undefined;
     from: string | undefined;
     to: string | undefined;
-    adults: string | number | undefined;
-    children: string | number | undefined;
-    rooms: number;
+    rooms: string;
 }
 
 export type BookingSetData = ReturnType<typeof useForm<BookingFormData>>['setData'];

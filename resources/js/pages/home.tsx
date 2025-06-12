@@ -1,9 +1,9 @@
-import { SearchRibbonProps, type SharedData } from '@/types';
+import { BookingFormData, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import AvailabilitySearchForm from './availability-search/availability-search-form';
+import BookingForm from './booking-form/booking-form';
 
 interface HomeProps {
-    searchRibbonProps: SearchRibbonProps;
+    bookingFormData: BookingFormData;
     flash: FlashMessages;
 }
 
@@ -11,11 +11,11 @@ interface FlashMessages {
     error: string;
 }
 
-export default function Home({ searchRibbonProps, flash }: HomeProps) {
+export default function Home({ bookingFormData, flash }: HomeProps) {
     console.log(arguments);
     const { auth } = usePage<SharedData>().props;
 
-    const { hotels } = searchRibbonProps;
+    const { hotels } = bookingFormData;
 
     return (
         <>
@@ -54,7 +54,7 @@ export default function Home({ searchRibbonProps, flash }: HomeProps) {
                 <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
                     <main className="flex w-full max-w-[335px] flex-col-reverse lg:max-w-4xl lg:flex-row">
                         {flash.error && <p className="text-red-500">{flash.error}</p>}
-                        <AvailabilitySearchForm hotels={hotels} />
+                        <BookingForm hotels={hotels} />
                     </main>
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>

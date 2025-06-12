@@ -49,9 +49,7 @@ class FetchRoomsServiceTest extends TestCase
         $from = Carbon::now()->addDays(14);
         $to = Carbon::now()->addDays(21);
 
-        $rooms = $this->sut->fetchAvailable(hotelId: 1, from: $from, to: $to);
-
-        var_dump(['rooms' => $rooms]);
+        $rooms = $this->sut->availableRooms(hotelId: 1, from: $from, to: $to);
 
         $this->assertEquals(2, $rooms->count());
     }
