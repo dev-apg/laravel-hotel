@@ -38,7 +38,7 @@ export function roomsReducer(rooms: RoomData[], action: RoomsAction): RoomData[]
             }
             break;
         case 'add_child':
-            if (target.children <= 2) {
+            if (target.children == 0) {
                 target.children = target.children + 1;
             }
             break;
