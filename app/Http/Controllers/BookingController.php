@@ -46,30 +46,67 @@ class BookingController extends Controller
         $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
         $hotel = Hotel::with('ancillaries')->find($request->hotel_id);
 
-        if ($request->rooms > count($availableRooms)) {
+        $requestedRooms = explode('_', $request->rooms);
+
+        if (count($requestedRooms) > count($availableRooms)) {
             $max = count($availableRooms);
             $roomText = $max > 1 ? 'rooms' : 'room';
             return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
         }
 
-        $roomsData = $availableRooms->map(function ($room) use ($hotel) {
-            return [
-                'id' => $room->id,
-                'number' => $room->number,
-                'selected_ancillaries' => [], // Empty by default
-                'available_ancillaries' => $hotel->ancillaries
-            ];
+        $standard = $availableRooms->filter(function ($room) {
+            return $room->type == 'standard';
         });
 
+        $deluxe = $availableRooms->filter(function ($room) {
+            return $room->type == 'deluxe';
+        });
+
+        $availableRoomsData = collect([]);
+
+        foreach ($requestedRooms as $requested) {
+            [$adults, $children] = explode('-', $requested);
+
+            $available = null;
+            if ($standard->count() > 0) {
+                $available = $standard->shift();
+            } elseif ($deluxe->count() > 0) {
+                $available = $deluxe->shift();
+            }
+
+            // Safety check
+            if ($available === null) {
+                return $this->redirectToHome("Unable to allocate enough rooms for your request");
+            }
+
+            // Push as array, not Collection
+            $availableRoomsData->push([
+                'id' => $available->id,
+                'adults' => $adults,
+                'children' => $children,
+                'type' => $available->type,
+                'upgradeable' => false,
+                'upgrade_requested' => false,
+                'selected_ancillaries' => [],
+                'available_ancillaries' => $hotel->ancillaries
+            ]);
+        }
+
+        // Use map() to modify the collection items, and access as array
+        $availableRoomsData = $availableRoomsData->map(function ($roomData) use ($deluxe) {
+            if ($roomData['type'] == 'standard' && $deluxe->count() > 0) {
+                $deluxe->shift();
+                $roomData['upgradeable'] = true;
+            }
+            return $roomData;
+        });
 
         $props = [
             'hotel' => $hotel,
             'rooms' => $request->rooms,
             'from' => $request->from,
             'to' => $request->to,
-            'adults' => $request->adults,
-            'children' => $request->children,
-            'rooms_data' => $roomsData
+            'rooms_data' => $availableRoomsData
         ];
 
         return Inertia::render('ancillaries', compact('props'));
