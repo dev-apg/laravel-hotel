@@ -101,7 +101,7 @@ class BookingController extends Controller
             return $roomData;
         });
 
-        $props = [
+        $ancillariesData = [
             'hotel' => $hotel,
             'rooms' => $request->rooms,
             'from' => $request->from,
@@ -109,7 +109,7 @@ class BookingController extends Controller
             'rooms_data' => $availableRoomsData
         ];
 
-        return Inertia::render('ancillaries', compact('props'));
+        return Inertia::render('ancillaries', compact('ancillariesData'));
     }
 
     private function redirectToHome($message)
