@@ -7,14 +7,14 @@ use App\Models\Hotel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class AncillariesSeeder extends Seeder
+class extrasSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $ancillaries = [
+        $extras = [
             [
                 'name' => 'premium wifi',
                 'pricing_type' => 'per_stay',
@@ -42,7 +42,7 @@ class AncillariesSeeder extends Seeder
             ],
         ];
 
-        foreach ($ancillaries as $ancillary) {
+        foreach ($extras as $ancillary) {
             Ancillary::create($ancillary);
         }
 
@@ -50,7 +50,7 @@ class AncillariesSeeder extends Seeder
 
         foreach ($hotels as $hotel) {
             for ($x = 1; $x < 4; $x++) {
-                $hotel->ancillaries()->attach([
+                $hotel->extras()->attach([
                     [
                         'ancillary_id' => $x,
                         'price' => 10.99,

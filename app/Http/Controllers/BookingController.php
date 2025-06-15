@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\ConvertRoomsParamToJson;
 use App\Http\Services\FetchRoomsService;
+use App\Models\BookingSession;
 use App\Models\Hotel;
-use App\Rules\OccupancyRule;
-use App\Rules\ValidateRoomsString;
+use App\Rules\ValidateRoomsParam;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -27,15 +26,66 @@ class BookingController extends Controller
     }
 
     /**
-     * Display list of ancillaries
+     * Display list of extras
      */
 
-    public function ancillaries(Request $request, FetchRoomsService $fetch)
+    public function createBookingSession(Request $request, FetchRoomsService $fetch, ConvertRoomsParamToJson $convert)
     {
         try {
             $validated = $request->validate([
                 'hotel_id' => 'required|integer|exists:hotels,id',
-                'rooms' => ['required', new ValidateRoomsString(adults: ['min' => 1, 'max' => 2], children: ['min' => 0, 'max' => 1])],
+                'rooms' => ['required', new ValidateRoomsParam(adults: ['min' => 1, 'max' => 2], children: ['min' => 0, 'max' => 1])],
+                'from' => 'required|date_format:Y-m-d|after_or_equal:today',
+                'to' => 'required|date_format:Y-m-d|after:from',
+            ]);
+        } catch (ValidationException $e) {
+            return $this->redirectToHome('There was a problem with your request, please try again');
+        }
+
+        $hotel = Hotel::find($validated['hotel_id']);
+        $bookingRequest = $convert->toArray($validated, $hotel);
+        $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
+
+        if (count($bookingRequest['rooms']) > $availableRooms->count()) {
+            $max = $availableRooms->count();
+            $roomText = $max > 1 ? 'rooms' : 'room';
+            return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
+        }
+
+        $standard = $availableRooms->filter(function ($room) {
+            return $room->type == 'standard';
+        });
+
+        $deluxe = $availableRooms->filter(function ($room) {
+            return $room->type == 'deluxe';
+        });
+
+        $requestedRoomsTotal = $bookingRequest['rooms'];
+
+        for ($i = 0; $i < $requestedRoomsTotal; $i++) {
+            if ($standard->somethingOrOther) {
+            }
+        }
+
+        do {
+            $sessionToken = str()->random(10);
+        } while (BookingSession::where('session_token', $sessionToken)->exists());
+
+        $bookingSession = BookingSession::create([
+            'session_token' => $sessionToken,
+            'booking_data' => $bookingRequest,
+            'expires_at' => now()->addMinutes(15),
+        ]);
+
+        return redirect()->route('bookings.extras', ['session_token' => $sessionToken]);
+    }
+
+    public function extras(Request $request, FetchRoomsService $fetch)
+    {
+        try {
+            $validated = $request->validate([
+                'hotel_id' => 'required|integer|exists:hotels,id',
+                'rooms' => ['required', new ValidateRoomsParam(adults: ['min' => 1, 'max' => 2], children: ['min' => 0, 'max' => 1])],
                 'from' => 'required|date_format:Y-m-d|after_or_equal:today',
                 'to' => 'required|date_format:Y-m-d|after:from',
             ]);
@@ -44,7 +94,7 @@ class BookingController extends Controller
         }
 
         $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
-        $hotel = Hotel::with('ancillaries')->find($request->hotel_id);
+        $hotel = Hotel::with('extras')->find($request->hotel_id);
 
         $requestedRooms = explode('_', $request->rooms);
 
@@ -87,8 +137,8 @@ class BookingController extends Controller
                 'type' => $available->type,
                 'upgradeable' => false,
                 'upgrade_requested' => false,
-                'selected_ancillaries' => [],
-                'available_ancillaries' => $hotel->ancillaries
+                'selected_extras' => [],
+                'available_extras' => $hotel->extras
             ]);
         }
 
@@ -101,7 +151,7 @@ class BookingController extends Controller
             return $roomData;
         });
 
-        $ancillariesData = [
+        $extrasData = [
             'hotel' => $hotel,
             'rooms' => $request->rooms,
             'from' => $request->from,
@@ -109,7 +159,7 @@ class BookingController extends Controller
             'rooms_data' => $availableRoomsData
         ];
 
-        return Inertia::render('ancillaries', compact('ancillariesData'));
+        return Inertia::render('extras', compact('extrasData'));
     }
 
     private function redirectToHome($message)

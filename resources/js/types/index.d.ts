@@ -68,6 +68,8 @@ export interface Hotel {
 export interface RoomData {
     uuid: string;
     removable: boolean;
+    typeList: RoomType[];
+    type: RoomType;
     adults: number;
     children: number;
 }
@@ -79,6 +81,7 @@ export interface RoomsAction {
 
 export interface RoomsPayload {
     uuid: string;
+    type?: RoomType;
 }
 
 export type RoomAction =
@@ -88,7 +91,8 @@ export type RoomAction =
     | { type: 'remove_adult'; payload: { uuid: string } }
     | { type: 'add_child'; payload: { uuid: string } }
     | { type: 'remove_child'; payload: { uuid: string } }
-    | { type: 'reset' };
+    | { type: 'reset' }
+    | { type: 'update_room_type'; payload: { uuid: room.uuid; type: RoomType } };
 
 export interface Ancillary {
     id: number;

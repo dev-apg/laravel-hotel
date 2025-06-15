@@ -1,5 +1,6 @@
 import type { RoomAction, RoomData } from '@/types';
 import { Minus, Plus, X } from 'lucide-react';
+import SelectRoomType from './select-room-type';
 
 interface RoomComponentProps {
     room: RoomData;
@@ -29,6 +30,7 @@ export default function Room({ room, dispatchRooms }: RoomComponentProps) {
                 <span onClick={() => dispatchRooms({ type: 'remove_child', payload: { uuid: room.uuid } })}>
                     <Minus />
                 </span>
+                <SelectRoomType room={room} dispatchRooms={dispatchRooms} />
             </div>
         </div>
     );

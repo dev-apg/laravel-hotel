@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class ValidateRoomsString implements ValidationRule
+class ValidateRoomsParam implements ValidationRule
 {
 
     private int $minAdults;

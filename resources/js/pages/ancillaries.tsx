@@ -1,26 +1,25 @@
-import AncillariesListComponent from '@/components/ancillaries/ancillaries-list-component';
-import UpgradeRoom from '@/components/ancillaries/upgrade-room';
+import UpgradeRoom from '@/components/extras/upgrade-room';
 import HotelDetails from '@/components/hotel-details';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
-interface AncillariesProps {
-    ancillariesData: any;
+interface extrasProps {
+    extrasData: any;
 }
 
-interface AncillariesFormData {
+interface extrasFormData {
     hotel: string;
     from: string;
     to: string;
     rooms: string;
 }
 
-export default function Ancillaries({ ancillariesData }: AncillariesProps) {
-    console.log(ancillariesData);
-    const { hotel, from, to, rooms, rooms_data, ancillaries } = ancillariesData;
+export default function extras({ extrasData }: extrasProps) {
+    console.log(extrasData);
+    const { hotel, from, to, rooms, rooms_data, extras } = extrasData;
 
-    const { data, setData, get, processing, errors, reset } = useForm<Required<AncillariesFormData>>({
+    const { data, setData, get, processing, errors, reset } = useForm<Required<extrasFormData>>({
         hotel: hotel,
         from: from,
         to: to,
@@ -48,7 +47,7 @@ export default function Ancillaries({ ancillariesData }: AncillariesProps) {
                                 <p>Adults: {room_data.adults}</p>
                                 <p>{room_data.children > 0 && `Children: ${room_data.children}`}</p>
                                 {room_data.upgradeable && <UpgradeRoom room_data={room_data} />}
-                                <AncillariesListComponent ancillaries={room_data.available_ancillaries} />
+                                <extrasListComponent extras={room_data.available_extras} />
                             </div>
                         );
                     })}

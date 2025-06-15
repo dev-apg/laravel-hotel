@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [BookingController::class, 'index'])->name('home');
-Route::get('/bookings/ancillaries', [BookingController::class, 'ancillaries'])->name('bookings.ancillaries');
+Route::get('bookings/create-session', [BookingController::class, 'createBookingSession'])->name('bookings.create-booking-session');
+Route::get('/bookings/upgrade/{session_token}', [BookingController::class, 'upgrade'])->name('bookings.upgrade');
+Route::get('/bookings/extras/{session_token}', [BookingController::class, 'extras'])->name('bookings.extras');
 Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 
 Route::middleware(['auth', 'verified'])->group(function () {

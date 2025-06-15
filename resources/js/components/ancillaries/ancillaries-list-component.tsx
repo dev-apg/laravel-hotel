@@ -1,14 +1,14 @@
 import { type Ancillary } from '@/types';
 import AncillaryComponent from './ancillary-component';
 
-interface AncillariesListComponentProps {
-    ancillaries: Ancillary[];
+interface extrasListComponentProps {
+    extras: Ancillary[];
 }
 
-export default function AncillariesListComponent({ ancillaries }: AncillariesListComponentProps) {
+export default function extrasListComponent({ extras }: extrasListComponentProps) {
     return (
         <div>
-            {ancillaries.map((ancillary) => (
+            {extras.map((ancillary) => (
                 <AncillaryComponent key={ancillary.id} ancillary={ancillary} />
             ))}
         </div>

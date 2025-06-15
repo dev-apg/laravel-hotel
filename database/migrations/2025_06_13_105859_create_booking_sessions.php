@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('extras', function (Blueprint $table) {
+        Schema::create('booking_sessions', function (Blueprint $table) {
+
             $table->id();
-            $table->string('name');
-            $table->enum('pricing_type', ['per_stay', 'per_person_per_day']);
-            $table->text('description');
+            $table->string('session_token', 10)->unique();
+            $table->json('details');
+            $table->timestamp('expires_at');
             $table->timestamps();
+
+            $table->index('session_token');
+            $table->index('expires_at');
         });
     }
 
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('extras');
+        Schema::dropIfExists('booking_sessions');
     }
 };

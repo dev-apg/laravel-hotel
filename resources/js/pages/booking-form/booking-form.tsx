@@ -15,7 +15,7 @@ interface BookingFormProps {
 }
 
 function buildRoomsString(rooms: RoomData[]): string {
-    return rooms.map((room) => `${room.adults}-${room.children}`).join('_');
+    return rooms.map((room) => `${room.adults}-${room.children}-${room.type}`).join('_');
 }
 
 function dataMissing(data: BookingFormValues): boolean {
@@ -105,7 +105,7 @@ export default function BookingForm({ hotels }: BookingFormProps) {
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        get(route('bookings.ancillaries', {}), {});
+        get(route('bookings.create-booking-session', {}), {});
     }
 
     return (

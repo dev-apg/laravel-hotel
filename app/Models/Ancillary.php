@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ancillary extends Model
 {
-    protected $table = "ancillaries";
+    protected $table = "extras";
 
     public function hotels(): BelongsToMany
     {

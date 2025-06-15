@@ -23,7 +23,7 @@ class Hotel extends Model
         return $this->hasMany(Room::class);
     }
 
-    public function ancillaries(): BelongsToMany
+    public function extras(): BelongsToMany
     {
         return $this->belongsToMany(Ancillary::class);
     }

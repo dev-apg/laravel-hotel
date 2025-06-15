@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('hotels')->truncate();
         DB::table('rooms')->truncate();
-        DB::table('ancillaries')->truncate();
+        DB::table('extras')->truncate();
         DB::table('bookings')->truncate();
         DB::table('ancillary_hotel')->truncate();
         DB::table('ancillary_booking')->truncate();
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
         $this->call(HotelsSeeder::class);
         $this->call(RoomsSeeder::class);
-        $this->call(AncillariesSeeder::class);
+        $this->call(extrasSeeder::class);
         $this->call(BookingsSeeder::class);
     }
 }

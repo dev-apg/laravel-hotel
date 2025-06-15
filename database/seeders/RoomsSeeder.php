@@ -20,47 +20,63 @@ class RoomsSeeder extends Seeder
         $rooms = [
             [
                 'number' => '1a',
-                'type' => 'standard',
+                'type' => 'single',
             ],
             [
                 'number' => '1b',
-                'type' => 'standard',
+                'type' => 'double',
             ],
             [
                 'number' => '1c',
-                'type' => 'standard',
+                'type' => 'twin',
+            ],
+            [
+                'number' => '1d',
+                'type' => 'family',
+            ],
+            [
+                'number' => '1e',
+                'type' => 'accessible',
             ],
             [
                 'number' => '2a',
-                'type' => 'standard',
+                'type' => 'single',
             ],
             [
                 'number' => '2b',
-                'type' => 'standard',
+                'type' => 'double',
             ],
             [
                 'number' => '2c',
-                'type' => 'deluxe',
+                'type' => 'twin',
             ],
             [
                 'number' => '2d',
-                'type' => 'deluxe',
+                'type' => 'family',
+            ],
+            [
+                'number' => '2e',
+                'type' => 'accessible',
             ],
             [
                 'number' => '3a',
-                'type' => 'standard',
+                'type' => 'single',
             ],
             [
                 'number' => '3b',
-                'type' => 'standard',
+                'type' => 'double',
             ],
             [
                 'number' => '3c',
-                'type' => 'deluxe',
+                'type' => 'twin',
             ],
             [
                 'number' => '3d',
-                'type' => 'deluxe',
+                'type' => 'family',
+            ],
+            [
+                'number' => '3e',
+                'type' => 'accessible',
             ],
         ];
 

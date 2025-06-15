@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('number');
             $table->enum('type', [
-                'standard',
-                'deluxe'
+                'single',
+                'double',
+                'family',
+                'accessible'
             ]);
             $table->string('hotel_id');
             $table->timestamps();

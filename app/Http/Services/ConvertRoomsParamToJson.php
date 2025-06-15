@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Services;
+
+use App\Models\Hotel;
+
+class ConvertRoomsParamToJson
+{
+    public function toArray(array $requested, Hotel $hotel): array
+    {
+        $arr = [
+            'hotel_id' => $requested['hotel_id'],
+            'hotel' => $hotel->name,
+            'from' => $requested['from'],
+            'to' => $requested['to'],
+            'rooms' => [],
+            'extras' => $hotel->extras,
+        ];
+
+        $rooms = explode('_', $requested['rooms']);
+
+        foreach ($rooms as $room) {
+            [$adults, $children] = explode('-', $room);
+
+            $arr['rooms'][] = [
+                'adults' => $adults,
+                'children' => $children,
+            ];
+        }
+
+        return $arr;
+    }
+}

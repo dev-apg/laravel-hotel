@@ -21,7 +21,7 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function ancillaries(): BelongsToMany
+    public function extras(): BelongsToMany
     {
         return $this->belongsToMany(Ancillary::class);
     }
