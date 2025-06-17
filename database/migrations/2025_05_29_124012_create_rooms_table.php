@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('type', [
                 'single',
                 'double',
+                'twin',
                 'family',
                 'accessible'
             ]);
