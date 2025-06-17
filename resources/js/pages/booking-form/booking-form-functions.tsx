@@ -43,15 +43,25 @@ export function roomsReducer(rooms: RoomData[], action: RoomsAction): RoomData[]
         case 'add_adult':
             if (target.adults == 1) {
                 target.adults = target.adults + 1;
-                target.typeList = dualRoomTypes;
-                target.type = RoomType.double;
+                if (target.children > 0) {
+                    target.typeList = familyRoomTypes;
+                    target.type = RoomType.family;
+                } else {
+                    target.typeList = dualRoomTypes;
+                    target.type = RoomType.double;
+                }
             }
             break;
         case 'remove_adult':
             if (target.adults == 2) {
                 target.adults = target.adults - 1;
-                target.typeList = singleRoomTypes;
-                target.type = RoomType.double;
+                if (target.children > 0) {
+                    target.typeList = familyRoomTypes;
+                    target.type = RoomType.family;
+                } else {
+                    target.typeList = singleRoomTypes;
+                    target.type = RoomType.double;
+                }
             }
             break;
         case 'add_child':
@@ -64,12 +74,14 @@ export function roomsReducer(rooms: RoomData[], action: RoomsAction): RoomData[]
         case 'remove_child':
             if (target.children > 0) {
                 target.children = target.children - 1;
-                if (target.adults == 2) {
-                    target.typeList = dualRoomTypes;
-                    target.type = RoomType.double;
-                } else {
-                    target.typeList = singleRoomTypes;
-                    target.type = RoomType.double;
+                if (target.children == 0) {
+                    if (target.adults == 2) {
+                        target.typeList = dualRoomTypes;
+                        target.type = RoomType.double;
+                    } else {
+                        target.typeList = singleRoomTypes;
+                        target.type = RoomType.double;
+                    }
                 }
             }
             break;
