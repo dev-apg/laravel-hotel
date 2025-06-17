@@ -1,15 +1,15 @@
-import { type Ancillary } from '@/types';
-import AncillaryComponent from './ancillary-component';
+import { type Extra } from '@/types';
+import ExtraComponent from './extra-component';
 
 interface extrasListComponentProps {
-    extras: Ancillary[];
+    extras: Extra[];
 }
 
 export default function extrasListComponent({ extras }: extrasListComponentProps) {
     return (
         <div>
-            {extras.map((ancillary) => (
-                <AncillaryComponent key={ancillary.id} ancillary={ancillary} />
+            {extras.map((extra) => (
+                <ExtraComponent key={extra.id} extra={extra} />
             ))}
         </div>
     );

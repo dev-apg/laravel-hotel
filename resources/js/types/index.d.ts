@@ -94,7 +94,7 @@ export type RoomAction =
     | { type: 'reset' }
     | { type: 'update_room_type'; payload: { uuid: room.uuid; type: RoomType } };
 
-export interface Ancillary {
+export interface Extra {
     id: number;
     name: string;
     pricing_type: string;

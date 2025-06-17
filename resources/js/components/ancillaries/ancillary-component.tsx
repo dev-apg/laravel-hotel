@@ -1,13 +1,13 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { type Ancillary } from '@/types';
+import { type Extra } from '@/types';
 
-interface AncillaryProps {
-    ancillary: Ancillary;
+interface ExtraComponentProps {
+    extra: Extra;
 }
 
-export default function AncillaryComponent({ ancillary }: AncillaryProps) {
-    const { id, name, description } = ancillary;
+export default function ExtraComponent({ extra }: ExtraComponentProps) {
+    const { id, name, description } = extra;
     return (
         <div className="p-2">
             <div className="flex items-center gap-2">

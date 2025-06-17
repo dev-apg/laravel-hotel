@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\ConvertRoomsParamToJson;
+use App\Http\Services\ConvertRoomsParamToArray;
 use App\Http\Services\FetchRoomsService;
 use App\Models\BookingSession;
 use App\Models\Hotel;
@@ -29,7 +29,7 @@ class BookingController extends Controller
      * Display list of extras
      */
 
-    public function createBookingSession(Request $request, FetchRoomsService $fetch, ConvertRoomsParamToJson $convert)
+    public function createBookingSession(Request $request, FetchRoomsService $fetch, ConvertRoomsParamToArray $convert)
     {
         try {
             $validated = $request->validate([

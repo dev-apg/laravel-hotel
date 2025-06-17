@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ancillary_hotel', function (Blueprint $table) {
+        Schema::create('extra_hotel', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('hotel_id');
-            $table->bigInteger('ancillary_id');
+            $table->bigInteger('extra_id');
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ancillary_hotel');
+        Schema::dropIfExists('extra_hotel');
     }
 };

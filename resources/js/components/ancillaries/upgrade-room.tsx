@@ -1,12 +1,12 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { type Ancillary } from '@/types';
+import { type Extra } from '@/types';
 
-interface AncillaryProps {
-    ancillary: Ancillary;
+interface UpgradeRoomProps {
+    extra: Extra;
 }
 
-export default function UpgradeRoom({ room_data }) {
+export default function UpgradeRoom({ room_data }: UpgradeRoomProps) {
     const { id } = room_data;
     return (
         <div className="p-2">

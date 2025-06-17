@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Ancillary extends Model
+class Extra extends Model
 {
     protected $table = "extras";
 
     public function hotels(): BelongsToMany
     {
-        return $this->belongsToMany(Ancillary::class);
+        return $this->belongsToMany(Extra::class);
     }
 }

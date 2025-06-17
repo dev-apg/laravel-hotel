@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ancillary;
+use App\Models\Extra;
 use App\Models\Hotel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -42,8 +42,8 @@ class extrasSeeder extends Seeder
             ],
         ];
 
-        foreach ($extras as $ancillary) {
-            Ancillary::create($ancillary);
+        foreach ($extras as $extra) {
+            Extra::create($extra);
         }
 
         $hotels = Hotel::all();
@@ -52,7 +52,7 @@ class extrasSeeder extends Seeder
             for ($x = 1; $x < 4; $x++) {
                 $hotel->extras()->attach([
                     [
-                        'ancillary_id' => $x,
+                        'extra_id' => $x,
                         'price' => 10.99,
                     ]
                 ]);

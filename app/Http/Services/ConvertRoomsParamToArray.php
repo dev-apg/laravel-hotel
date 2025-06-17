@@ -4,7 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\Hotel;
 
-class ConvertRoomsParamToJson
+class ConvertRoomsParamToArray
 {
     public function toArray(array $requested, Hotel $hotel): array
     {

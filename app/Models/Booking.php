@@ -23,6 +23,6 @@ class Booking extends Model
 
     public function extras(): BelongsToMany
     {
-        return $this->belongsToMany(Ancillary::class);
+        return $this->belongsToMany(Extra::class);
     }
 }
