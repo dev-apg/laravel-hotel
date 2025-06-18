@@ -6,8 +6,12 @@ use App\Models\Hotel;
 
 class ConvertRoomsParamToArray
 {
-    public function toArray(array $requested, Hotel $hotel): array
+    public function toArray(array $requested): array
+
     {
+
+        $hotel = Hotel::findOrFail($requested['hotel_id']);
+
         $arr = [
             'hotel_id' => $requested['hotel_id'],
             'hotel' => $hotel->name,
