@@ -24,11 +24,12 @@ class ConvertRoomsParamToArray
         $rooms = explode('_', $requested['rooms']);
 
         foreach ($rooms as $room) {
-            [$adults, $children] = explode('-', $room);
+            [$adults, $children, $type] = explode('-', $room);
 
             $arr['rooms'][] = [
                 'adults' => $adults,
                 'children' => $children,
+                'type' => $type,
             ];
         }
 

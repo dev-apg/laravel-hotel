@@ -38,7 +38,7 @@ class ConvertRoomsParamsToArrayTest extends TestCase
             'hotel_id' => 1,
             'from' => '2024-01-01',
             'to' => '2024-01-05',
-            'rooms' => '2-1_1-0'
+            'rooms' => '2-1-family_1-0-single'
         ];
 
         $result = $this->sut->toArray($input);
@@ -55,7 +55,7 @@ class ConvertRoomsParamsToArrayTest extends TestCase
 
         $this->assertCount(2, $result['rooms']);
 
-        $this->assertEquals(['adults' => '2', 'children' => '1'], $result['rooms'][0]);
-        $this->assertEquals(['adults' => '1', 'children' => '0'], $result['rooms'][1]);
+        $this->assertEquals(['adults' => '2', 'children' => '1', 'type' => 'family'], $result['rooms'][0]);
+        $this->assertEquals(['adults' => '1', 'children' => '0', 'type' => 'single'], $result['rooms'][1]);
     }
 }
