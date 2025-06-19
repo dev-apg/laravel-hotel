@@ -44,13 +44,11 @@ class AvailabilityCheck
 
         foreach ($required as $type => $count) {
             if ($count) {
-                var_dump("This is the type: $type and the count: $count");
                 $available[$type] = Room::wheredoesnthave('bookings', function ($query) use ($from, $to) {
                     $query->where(function ($inner) use ($from, $to) {
                         $inner->where('from', '<', $to)->where('to', '>', $from);
                     });
                 })->where('hotel_id', $hotelId)->where('type', $type)->count();
-                var_dump("This is the type: $type and the number of rooms was $available[$type]");
             }
         }
 

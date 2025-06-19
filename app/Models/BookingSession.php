@@ -8,7 +8,7 @@ class BookingSession extends Model
 {
     protected $fillable = [
         'session_token',
-        'booking_data',
+        'details',
         'expires_at'
     ];
 

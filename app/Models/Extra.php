@@ -14,6 +14,6 @@ class Extra extends Model
 
     public function hotels(): BelongsToMany
     {
-        return $this->belongsToMany(Extra::class);
+        return $this->belongsToMany(Hotel::class);
     }
 }

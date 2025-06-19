@@ -7,10 +7,9 @@ use App\Models\Hotel;
 class ConvertRoomsParamToArray
 {
     public function toArray(array $requested): array
-
     {
 
-        $hotel = Hotel::findOrFail($requested['hotel_id']);
+        $hotel = Hotel::with('extras')->findOrFail($requested['hotel_id']);
 
         $arr = [
             'hotel_id' => $requested['hotel_id'],
@@ -18,10 +17,21 @@ class ConvertRoomsParamToArray
             'from' => $requested['from'],
             'to' => $requested['to'],
             'rooms' => [],
-            'extras' => $hotel->extras,
         ];
 
         $rooms = explode('_', $requested['rooms']);
+
+        $extrasArray = [];
+
+        foreach ($hotel->extras as $extra) {
+            $extrasArray[] = [
+                'id' => $extra->id,
+                'name' => $extra->name,
+                'description' => $extra->description,
+                'pricing_type' => $extra->pricing_type,
+                'price' => $extra->pivot->price
+            ];
+        }
 
         foreach ($rooms as $room) {
             [$adults, $children, $type] = explode('-', $room);
@@ -30,6 +40,8 @@ class ConvertRoomsParamToArray
                 'adults' => $adults,
                 'children' => $children,
                 'type' => $type,
+                'extras' => $extrasArray,
+                'selected_extras' => [],
             ];
         }
 

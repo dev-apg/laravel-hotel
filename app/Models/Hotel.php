@@ -29,6 +29,6 @@ class Hotel extends Model
 
     public function extras(): BelongsToMany
     {
-        return $this->belongsToMany(Extra::class);
+        return $this->belongsToMany(Extra::class, 'extra_hotel')->withPivot('price');
     }
 }
