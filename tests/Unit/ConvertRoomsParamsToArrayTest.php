@@ -43,19 +43,30 @@ class ConvertRoomsParamsToArrayTest extends TestCase
 
         $result = $this->sut->toArray($input);
 
-        $this->assertTrue(true);
-
         $this->assertEquals(1, $result['hotel_id']);
         $this->assertEquals('Test Hotellll', $result['hotel']);
         $this->assertEquals('2024-01-01', $result['from']);
         $this->assertEquals('2024-01-05', $result['to']);
 
-        // $extraNames = $result['extras']->pluck('name')->toArray();
-        // $this->assertEquals(['breakfast', 'wifi'], $extraNames);
-
         $this->assertCount(2, $result['rooms']);
 
-        $this->assertEquals(['adults' => '2', 'children' => '1', 'type' => 'family', 'available_extras' => $hotel->extras->toArray(), 'selected_extras' => []], $result['rooms'][0]);
-        // $this->assertEquals(['adults' => '1', 'children' => '0', 'type' => 'single'], $result['rooms'][1]);
+        $this->assertEquals(['adults' => '2', 'children' => '1', 'type' => 'family', 'extras' => $hotel->extras->map(function ($extra) {
+            return [
+                'id' => $extra->id,
+                'name' => $extra->name,
+                'description' => $extra->description,
+                'pricing_type' => $extra->pricing_type,
+                'price' => $extra->pivot->price
+            ];
+        })->toArray(), 'selected_extras' => []], $result['rooms'][0]);
+        $this->assertEquals(['adults' => '1', 'children' => '0', 'type' => 'single', 'extras' => $hotel->extras->map(function ($extra) {
+            return [
+                'id' => $extra->id,
+                'name' => $extra->name,
+                'description' => $extra->description,
+                'pricing_type' => $extra->pricing_type,
+                'price' => $extra->pivot->price
+            ];
+        })->toArray(), 'selected_extras' => []], $result['rooms'][1]);
     }
 }
