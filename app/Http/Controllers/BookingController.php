@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\AvailabilityCheck;
 use App\Http\Services\ConvertRoomsParamToArray;
 use App\Http\Services\FetchRoomsService;
 use App\Models\BookingSession;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use PhpParser\Node\Stmt\TryCatch;
 
 class BookingController extends Controller
 {
@@ -29,7 +31,7 @@ class BookingController extends Controller
      * Display list of extras
      */
 
-    public function createBookingSession(Request $request, FetchRoomsService $fetch, ConvertRoomsParamToArray $convert)
+    public function createBookingSession(Request $request, ConvertRoomsParamToArray $convert, AvailabilityCheck $availability)
     {
         try {
             $validated = $request->validate([
@@ -42,42 +44,67 @@ class BookingController extends Controller
             return $this->redirectToHome('There was a problem with your request, please try again');
         }
 
-        $hotel = Hotel::find($validated['hotel_id']);
-        $bookingRequest = $convert->toArray($validated, $hotel);
-        $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
+        // 1) TURN PARAM INTO ARRAY
 
-        if (count($bookingRequest['rooms']) > $availableRooms->count()) {
-            $max = $availableRooms->count();
-            $roomText = $max > 1 ? 'rooms' : 'room';
-            return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
+        try {
+            $booking = $convert->toArray($validated);
+        } catch (\Throwable $th) {
+            return $this->redirectToHome('There was a problem with your request, please try again');
         }
 
-        $standard = $availableRooms->filter(function ($room) {
-            return $room->type == 'standard';
-        });
+        // 2) CHECK AVAILABILITY 
 
-        $deluxe = $availableRooms->filter(function ($room) {
-            return $room->type == 'deluxe';
-        });
-
-        $requestedRoomsTotal = $bookingRequest['rooms'];
-
-        for ($i = 0; $i < $requestedRoomsTotal; $i++) {
-            if ($standard->somethingOrOther) {
+        try {
+            if (!$availability->check($booking)) {
+                return $this->redirectToHome("I'm sorry but these rooms are not available for your chosen dates");
             }
+        } catch (\Throwable $th) {
+            return $this->redirectToHome('There was a problem with your request, please try again');
         }
 
-        do {
-            $sessionToken = str()->random(10);
-        } while (BookingSession::where('session_token', $sessionToken)->exists());
 
-        $bookingSession = BookingSession::create([
-            'session_token' => $sessionToken,
-            'booking_data' => $bookingRequest,
-            'expires_at' => now()->addMinutes(15),
-        ]);
 
-        return redirect()->route('bookings.extras', ['session_token' => $sessionToken]);
+        // any kind of problem, then redirect to home with message
+
+        // 3) ADD SEARCH TO SESSION
+
+        // $bookingRequest = $convert->toArray($validated, $hotel);
+        // $availableRooms = $fetch->availableRooms($request->hotel_id, Carbon::parse($request->from), Carbon::parse($request->to));
+
+
+
+        // if (count($bookingRequest['rooms']) > $availableRooms->count()) {
+        //     $max = $availableRooms->count();
+        //     $roomText = $max > 1 ? 'rooms' : 'room';
+        //     return $this->redirectToHome("Unfortunately, we only have $max $roomText available for your chosen dates");
+        // }
+
+        // $standard = $availableRooms->filter(function ($room) {
+        //     return $room->type == 'standard';
+        // });
+
+        // $deluxe = $availableRooms->filter(function ($room) {
+        //     return $room->type == 'deluxe';
+        // });
+
+        // $requestedRoomsTotal = $bookingRequest['rooms'];
+
+        // for ($i = 0; $i < $requestedRoomsTotal; $i++) {
+        //     if ($standard->somethingOrOther) {
+        //     }
+        // }
+
+        // do {
+        //     $sessionToken = str()->random(10);
+        // } while (BookingSession::where('session_token', $sessionToken)->exists());
+
+        // $bookingSession = BookingSession::create([
+        //     'session_token' => $sessionToken,
+        //     'booking_data' => $bookingRequest,
+        //     'expires_at' => now()->addMinutes(15),
+        // ]);
+
+        // return redirect()->route('bookings.extras', ['session_token' => $sessionToken]);
     }
 
     public function extras(Request $request, FetchRoomsService $fetch)
