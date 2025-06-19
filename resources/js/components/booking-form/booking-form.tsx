@@ -1,14 +1,15 @@
+import { BookingFormData, BookingFormValues, Hotel, RoomAction, RoomData } from '@/types';
 import { Button } from '@/components/ui/button';
-import { BookingFormValues, Hotel, RoomAction, RoomData } from '@/types';
-import { useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { format, isAfter, isSameDay, startOfDay } from 'date-fns';
 import { LoaderCircle } from 'lucide-react';
 import { FormEvent, useEffect, useReducer, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { newRoomData, roomsReducer } from './booking-form-functions';
 import DatePicker from './date-picker';
-import Rooms from './rooms';
 import SelectHotel from './select-hotel';
+import SelectRoomType from './select-room-type';
+import Rooms from './rooms';
+import { newRoomData, roomsReducer } from './booking-form-functions';
 
 interface BookingFormProps {
     hotels: Hotel[];

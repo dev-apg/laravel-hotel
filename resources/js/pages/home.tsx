@@ -1,6 +1,6 @@
 import { BookingFormData, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import BookingForm from './booking-form/booking-form';
+import BookingForm from '@/components/booking-form/booking-form';
 
 interface HomeProps {
     bookingFormData: BookingFormData;
