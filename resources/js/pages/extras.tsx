@@ -15,8 +15,8 @@ interface extrasFormData {
     rooms: string;
 }
 
-export default function extras({ bookingDetails }): Props {
-    console.log(JSON.parse(bookingDetails));
+export default function extras({ bookingDetails }: Props) {
+    console.log(bookingDetails);
 
     return <h1>welcom to extras</h1>;
     const { hotel, from, to, rooms, rooms_data, extras } = bookingDetails;

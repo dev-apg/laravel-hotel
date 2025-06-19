@@ -72,7 +72,7 @@ class BookingController extends Controller
 
         BookingSession::create([
             'session_token' => $sessionToken,
-            'details' => json_encode($bookingDetails),
+            'booking_data' => json_encode($bookingDetails),
             'expires_at' => Carbon::now()->addMinutes(15),
         ]);
 
@@ -81,9 +81,7 @@ class BookingController extends Controller
 
     public function extras(Request $request, string $session_token, AvailabilityCheck $availability)
     {
-
-        $bookingDetails = BookingSession::where('session_token', $session_token)->first()->details;
-
+        $bookingDetails = BookingSession::where('session_token', $session_token)->first()->booking_data;
         return Inertia::render('extras', compact('bookingDetails'));
     }
 

@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->id();
             $table->string('session_token', 10)->unique();
-            $table->json('details');
+            $table->json('booking_data');
             $table->timestamp('expires_at');
             $table->timestamps();
 
