@@ -97,6 +97,24 @@ export type RoomAction =
 export interface Extra {
     id: number;
     name: string;
-    pricing_type: string;
     description: string;
+    pricing_type: 'per_person_per_day' | 'per_stay';
+    price: number;
+    selected: boolean;
+}
+
+export interface BookingDetails {
+    hotel_id: number;
+    hotel: Hotel;
+    from: string;
+    to: string;
+    rooms: Array<Room>;
+}
+
+export interface Room {
+    id: number;
+    adults: number;
+    children: number;
+    type: string;
+    extras: Array<Extra>;
 }

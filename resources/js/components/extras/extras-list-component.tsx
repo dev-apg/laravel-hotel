@@ -1,11 +1,11 @@
 import { type Extra } from '@/types';
 import ExtraComponent from './extra-component';
 
-interface extrasListComponentProps {
+interface ExtrasListComponentProps {
     extras: Extra[];
 }
 
-export default function extrasListComponent({ extras }: extrasListComponentProps) {
+export default function ExtrasListComponent({ extras }: ExtrasListComponentProps) {
     return (
         <div>
             {extras.map((extra) => (

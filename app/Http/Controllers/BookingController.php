@@ -4,17 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\AvailabilityCheck;
 use App\Http\Services\ConvertRoomsParamToArray;
-use App\Http\Services\FetchRoomsService;
-use App\Models\Booking;
 use App\Models\BookingSession;
 use App\Models\Hotel;
 use App\Rules\ValidateRoomsParam;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use PhpParser\Node\Stmt\TryCatch;
 
 class BookingController extends Controller
 {
@@ -70,9 +68,10 @@ class BookingController extends Controller
             $sessionToken = Str::random(10);
         } while (BookingSession::where('session_token', $sessionToken)->exists());
 
-        BookingSession::create([
+
+        $bookingSession = BookingSession::create([
             'session_token' => $sessionToken,
-            'booking_data' => json_encode($bookingDetails),
+            'booking_data' => $bookingDetails,
             'expires_at' => Carbon::now()->addMinutes(15),
         ]);
 
@@ -81,8 +80,20 @@ class BookingController extends Controller
 
     public function extras(Request $request, string $session_token, AvailabilityCheck $availability)
     {
-        $bookingDetails = BookingSession::where('session_token', $session_token)->first()->booking_data;
-        return Inertia::render('extras', compact('bookingDetails'));
+
+        $bookingSession = BookingSession::where('session_token', $session_token)
+            ->first();
+
+        if (!$bookingSession) {
+            Log::error('Booking session not found', [
+                'token' => $session_token
+            ]);
+            return redirect()->route('home')->with('error', 'Booking session not found');
+        }
+
+        return Inertia::render('extras', [
+            'bookingDetails' => $bookingSession->booking_data,
+        ]);
     }
 
     private function redirectToHome($message)

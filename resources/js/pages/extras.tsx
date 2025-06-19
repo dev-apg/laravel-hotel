@@ -1,39 +1,32 @@
-// import UpgradeRoom from '@/components/extras/upgrade-room';
+import ExtrasListComponent from '@/components/extras/extras-list-component';
 import HotelDetails from '@/components/hotel-details';
 import { Button } from '@/components/ui/button';
+import type { BookingDetails } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { FormEvent } from 'react';
 
 interface Props {
-    bookingDetails: any;
+    bookingDetails: BookingDetails;
 }
 
 interface extrasFormData {
-    hotel: string;
-    from: string;
-    to: string;
-    rooms: string;
+    bookingDetails: BookingDetails;
+    [key: string]: any;
 }
 
 export default function extras({ bookingDetails }: Props) {
     console.log(bookingDetails);
 
-    return <h1>welcom to extras</h1>;
-    const { hotel, from, to, rooms, rooms_data, extras } = bookingDetails;
-
-    const { data, setData, get, processing, errors, reset } = useForm<Required<extrasFormData>>({
-        hotel: hotel,
-        from: from,
-        to: to,
-        rooms: rooms,
+    const { data, setData, post, processing, errors, reset } = useForm<extrasFormData>({
+        bookingDetails: bookingDetails,
     });
 
     function submit(e: FormEvent) {
         e.preventDefault();
         return;
-        get(route('bookings.create', {}), {});
+        post(route('bookings.create', {}), {});
     }
-
+    const { hotel, from, to, rooms } = bookingDetails;
     return (
         <div>
             <div className="flex flex-col">
@@ -41,15 +34,14 @@ export default function extras({ bookingDetails }: Props) {
                     <HotelDetails hotel={hotel} />
                 </div>
 
-                <form onSubmit={submit} action="" method="get">
-                    {rooms_data.map((room_data, index) => {
+                <form onSubmit={submit} action="" method="post">
+                    {rooms.map((room, index) => {
                         return (
-                            <div className={'mb-4 rounded-lg border border-black bg-gray-50 p-4'} key={room_data.id}>
+                            <div className={'mb-4 rounded-lg border border-black bg-gray-50 p-4'} key={room.id}>
                                 <p className="font-medium text-gray-900">Room {index + 1}</p>
-                                <p>Adults: {room_data.adults}</p>
-                                <p>{room_data.children > 0 && `Children: ${room_data.children}`}</p>
-                                {room_data.upgradeable && <UpgradeRoom room_data={room_data} />}
-                                <extrasListComponent extras={room_data.available_extras} />
+                                <p>Adults: {room.adults}</p>
+                                <p>{room.children > 0 && `Children: ${room.children}`}</p>
+                                <ExtrasListComponent extras={room.extras} />
                             </div>
                         );
                     })}

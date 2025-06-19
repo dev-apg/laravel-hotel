@@ -13,7 +13,7 @@ class ConvertRoomsParamToArray
 
         $arr = [
             'hotel_id' => $requested['hotel_id'],
-            'hotel' => $hotel->name,
+            'hotel' => $hotel,
             'from' => $requested['from'],
             'to' => $requested['to'],
             'rooms' => [],
@@ -29,7 +29,8 @@ class ConvertRoomsParamToArray
                 'name' => $extra->name,
                 'description' => $extra->description,
                 'pricing_type' => $extra->pricing_type,
-                'price' => $extra->pivot->price
+                'price' => $extra->pivot->price,
+                'selected' => false
             ];
         }
 
@@ -40,8 +41,7 @@ class ConvertRoomsParamToArray
                 'adults' => $adults,
                 'children' => $children,
                 'type' => $type,
-                'extras' => $extrasArray,
-                'selected_extras' => [],
+                'extras' => $extrasArray
             ];
         }
 
