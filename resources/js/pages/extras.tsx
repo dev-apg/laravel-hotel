@@ -9,24 +9,24 @@ interface Props {
     bookingDetails: BookingDetails;
 }
 
-interface extrasFormData {
+interface ExtrasFormData {
     bookingDetails: BookingDetails;
     [key: string]: any;
 }
 
 export default function extras({ bookingDetails }: Props) {
-    console.log(bookingDetails);
+    const { hotel, from, to, rooms } = bookingDetails;
 
-    const { data, setData, post, processing, errors, reset } = useForm<extrasFormData>({
+    console.log(rooms);
+
+    const { data, setData, post, processing, errors, reset } = useForm<ExtrasFormData>({
         bookingDetails: bookingDetails,
     });
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        return;
-        post(route('bookings.create', {}), {});
+        post(route('bookings.create', {}));
     }
-    const { hotel, from, to, rooms } = bookingDetails;
     return (
         <div>
             <div className="flex flex-col">
@@ -37,11 +37,11 @@ export default function extras({ bookingDetails }: Props) {
                 <form onSubmit={submit} action="" method="post">
                     {rooms.map((room, index) => {
                         return (
-                            <div className={'mb-4 rounded-lg border border-black bg-gray-50 p-4'} key={room.id}>
+                            <div key={room.id} className={'mb-4 rounded-lg border border-black bg-gray-50 p-4'}>
                                 <p className="font-medium text-gray-900">Room {index + 1}</p>
                                 <p>Adults: {room.adults}</p>
                                 <p>{room.children > 0 && `Children: ${room.children}`}</p>
-                                <ExtrasListComponent extras={room.extras} />
+                                {room.extras && room.extras.length > 0 && <ExtrasListComponent extras={room.extras} />}
                             </div>
                         );
                     })}

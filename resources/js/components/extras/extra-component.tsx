@@ -7,16 +7,23 @@ interface ExtraComponentProps {
 }
 
 export default function ExtraComponent({ extra }: ExtraComponentProps) {
-    const { id, name, description } = extra;
+    const { id, name, description, selected } = extra;
+
     return (
         <div className="p-2">
             <div className="flex items-center gap-2">
-                <Label className="text-xl" htmlFor={id.toString()}>
+                <Checkbox
+                    id={`extra-${id}`}
+                    checked={selected}
+                    onCheckedChange={(checked) => {
+                        console.log(checked);
+                    }}
+                />
+                <Label htmlFor={`extra-${id}`} className="cursor-pointer text-lg">
                     {name}
                 </Label>
-                <Checkbox id={id.toString()} className="" />
             </div>
-            <p>{description}</p>
+            <p className="ml-6 text-sm text-gray-600">{description}</p>
         </div>
     );
 }

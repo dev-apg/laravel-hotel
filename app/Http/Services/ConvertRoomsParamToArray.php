@@ -34,10 +34,18 @@ class ConvertRoomsParamToArray
             ];
         }
 
+        $roomIds = [];
+
         foreach ($rooms as $room) {
             [$adults, $children, $type] = explode('-', $room);
+            do {
+                $roomId = uniqid('tempid_', true);
+            } while (in_array($roomId, $roomIds));
+
+            $roomIds[] = $roomId;
 
             $arr['rooms'][] = [
+                'id' => $roomId,
                 'adults' => $adults,
                 'children' => $children,
                 'type' => $type,
